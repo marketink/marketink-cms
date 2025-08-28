@@ -1,0 +1,25 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "build-style": "cleancss -o public/build/theme.min.css public/assets/platform/css/theme.min.css public/assets/platform/css/theme.rtl.min.css &&  cleancss -o public/build/main.min.css public/assets/fontiran.css public/assets/platform/libs/slick-carousel/slick/slick.css public/assets/platform/libs/slick-carousel/slick/slick-theme.css public/assets/platform/libs/tiny-slider/dist/tiny-slider.css public/assets/platform/libs/bootstrap-icons/font/bootstrap-icons.min.css public/assets/platform/libs/feather-webfont/dist/feather-icons.css public/assets/platform/libs/simplebar/dist/simplebar.min.css public/assets/platform/css/order.css",
+        "build-script": "terser public/assets/platform/js/jalaali.min.js public/assets/platform/js/vendors/validation.js public/assets/platform/js/lazyload.min.js public/assets/platform/libs/bootstrap/dist/js/bootstrap.bundle.min.js public/assets/platform/libs/simplebar/dist/simplebar.min.js public/assets/platform/libs/rater-js/index.js public/assets/platform/js/vendors/jquery.min.js public/assets/platform/js/vendors/countdown.js public/assets/platform/libs/slick-carousel/slick/slick.min.js public/assets/platform/js/vendors/slick-slider.js public/assets/platform/libs/tiny-slider/dist/min/tiny-slider.js public/assets/platform/js/vendors/tns-slider.js public/assets/platform/js/vendors/zoom.js public/assets/platform/js/theme.min.js public/assets/platform/js/main.min.js -o public/build/main.min.js -c -m",
+        "build-asset": "npm run build-style && npm run build-script"
+    },
+    "devDependencies": {
+        "@popperjs/core": "^2.11.6",
+        "axios": "^1.6.4",
+        "bootstrap": "^5.3.6",
+        "clean-css-cli": "^5.6.3",
+        "laravel-vite-plugin": "^1.0.0",
+        "sass": "^1.56.1",
+        "vite": "^5.0.0"
+    },
+    "dependencies": {
+        "clean-css": "^5.3.3",
+        "jquery": "^3.7.1",
+        "terser": "^5.40.0"
+    }
+}
