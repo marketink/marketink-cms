@@ -24,7 +24,7 @@ class Kernel extends HttpKernel
 
         //\Fahlisaputra\Minify\Middleware\MinifyCss::class,
         //\Fahlisaputra\Minify\Middleware\MinifyJavascript::class,
-        \Fahlisaputra\Minify\Middleware\MinifyHtml::class, 
+        //\Fahlisaputra\Minify\Middleware\MinifyHtml::class, 
         \App\Http\Middleware\CacheControlHeaders::class   
     ];
 
