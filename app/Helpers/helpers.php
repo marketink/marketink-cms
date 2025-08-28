@@ -20,6 +20,14 @@ function langs(): array
                 "name" => "iran"
             ],
             "theme" => "rtl"
+        ],
+        [
+            "lang" => "en",
+            "country" => [
+                "code" => "uk",
+                "name" => "united kingdom"
+            ],
+            "theme" => "ltr"
         ]
     ];
 }
