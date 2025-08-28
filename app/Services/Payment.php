@@ -19,8 +19,6 @@ class Payment
 {
     protected $user;
     protected int $userId;
-    public const USER_SMS_CART = "725arf0s75o0yub";
-    public const ADMIN_SMS_CART = "dv24jyaiqlqxwfw";
     public static function make()
     {
         return new static();
@@ -68,7 +66,6 @@ class Payment
         } else {
             return redirect()->to('/profile');
         }
-
     }
 
     public function failed(int $transactionId, $info = null)
@@ -89,15 +86,15 @@ class Payment
             ->where("transaction_id", $transactionId)
             ->where('status', 'pending')
             ->first();
+
         if ($payment) {
             try {
                 $receipt = ShetabitPayment::amount($payment->amount)->transactionId($transactionId)->verify();
                 $payment->status = "success";
                 $payment->reference_id = $receipt->getReferenceId();
                 $payment->save();
-                $cart = Cart::query()
-                    ->where("status", "pending")
-                    ->findOrFail($payment->cart_id);
+
+                $cart = Cart::query()->where("status", "pending")->findOrFail($payment->cart_id);
                 $cart->update([
                     "status" => "paid",
                 ]);
@@ -131,9 +128,7 @@ class Payment
             ]
         ];
         SendSMS::dispatch(auth()->user()->username, $message);
-        $owners = \App\Models\User::query()
-            ->where("role", "admin")
-            ->get();
+        $owners = \App\Models\User::query()->where("role", "admin")->get();
         foreach ($owners as $owner) {
             $message = [
                 'pattern' => config("sms.admin_sms_cart_pattern"),

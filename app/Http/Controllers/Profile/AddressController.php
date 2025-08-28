@@ -28,7 +28,6 @@ class AddressController extends Controller
                 description: trans("message.parde_e_shop_seo")." | ". trans("message.profile"). " | " . trans("message.my_addresses")
             )
         ]);
-        //return DataTables::of($addresses)->make(true);
     }
     public function store(StoreAddressRequest $request)
     {
@@ -60,10 +59,7 @@ class AddressController extends Controller
 
     public function delete(int $id)
     {
-        $address = $this->addressService
-            ->setUser(auth()->user())
-            ->delete($id);
-        return redirect()
-            ->back();
+        $address = $this->addressService->setUser(auth()->user())->delete($id);
+        return redirect()->back();
     }
 }

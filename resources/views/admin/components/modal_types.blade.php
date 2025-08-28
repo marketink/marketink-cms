@@ -18,6 +18,9 @@
                                         <form data-success="files" method="POST"
                                             action="{{ route('files.store') }}?content={{ $type['type'] }}&type={{ $file }}"
                                             enctype="multipart/form-data" class="dropzone" data-dropzone-type="{{ $file }}"
+                                            title="{{ trans("message.dropzone_title", [
+                                                "logo" => trans("message." . $file)
+                                            ]) }}"
                                             id="dropzone-{{ $type['type'] }}-{{ $file }}">
                                             @csrf
                                         </form>

@@ -37,8 +37,7 @@ class User
     public function sendVerificationCode($user)
     {
         $expireTime = 60;
-        $otpCode = (new Otp)
-            ->generate((string) $user->username, 'numeric', 5, $expireTime);
+        $otpCode = (new Otp)->generate((string) $user->username, 'numeric', 5, $expireTime);
         $message = [
             'pattern' => config("sms.verify_activation_pattern"),
             'returnMessage' => " ارسال شد",
@@ -49,6 +48,7 @@ class User
         SendSMS::dispatch($user->username,$message);
         return $this;
     }
+
     public function verifyAccount($user, $code)
     {
         $otpCheck = (new Otp())->validate($user->username, $code);
@@ -92,10 +92,10 @@ class User
     {
         return $user->delete();
     }
+
     public function updatePassword($id, $data)
     {
-        $user = \App\Models\User::query()
-            ->findOrFail($id);
+        $user = Model::query()->findOrFail($id);
         if (Hash::check($data->current_password,$user->password))
         {
             $user->update([

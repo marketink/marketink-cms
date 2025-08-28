@@ -15,81 +15,71 @@ class OrderController extends Controller
     public function create(OrderRequest $request)
     {
         try {
-            if (!auth()->user()->username_verified_at) {
-                throw new Exception("لطفا شماره موبایل خود را تایید کنید");
-            }
-            return ShopService::make()
+            $cart = ShopService::make()
                 ->setUser(auth()->user())
-                ->multiple($request->validated());
+                ->setAmount($request->quantity)
+                ->setProductId($request->product_id)
+                ->create();
+
+            return redirect()->to(route("current.cart"));
         } catch (Exception $e) {
-            return response()->json([
-                "message" => $e->getMessage()
-            ], 403);
+            return redirect()->back()->withErrors(["msg" => $e->getMessage()]);
         }
     }
+
     public function index()
     {
-        $carts = ShopService::make()
-            ->setUser(auth()->user())
-            ->get();
+        $carts = ShopService::make()->setUser(auth()->user())->get();
         return view("shop.index", [
             "carts" => $carts,
             "SEOData" => new SEOData(
-                title: trans("message.orders"),
-                description: trans("message.parde_e_shop_seo") . " | " . trans("message.orders") . " | " . trans("message.cart")
-            )
+                    title: trans("message.orders"),
+                    description: trans("message.parde_e_shop_seo") . " | " . trans("message.orders") . " | " . trans("message.cart")
+                )
         ]);
 
     }
     public function show(int $id)
     {
-        $cart = ShopService::make()
-            ->setUser(auth()->user())
-            ->show($id);
-        return view("shop.show", [
+        $cart = ShopService::make()->setUser(auth()->user())->show($id);
+        return view("cart.show", [
             "cart" => $cart,
             "SEOData" => new SEOData(
-                title: trans("message.order"),
-                description: trans("message.parde_e_shop_seo") . " | " . trans("message.orders") . " | " . trans("message.cart")
-            )
+                    title: trans("message.order"),
+                    description: trans("message.parde_e_shop_seo") . " | " . trans("message.orders") . " | " . trans("message.cart")
+                )
         ]);
     }
 
     public function deleteAllOrders(Request $request)
     {
-        ShopService::make()
-            ->setUser(auth()->user())
-            ->deleteAllOrders();
+        ShopService::make()->setUser(auth()->user())->deleteAllOrders();
+        flash('با موفقیت حذف شد.');
         return redirect()->to(route("current.cart"));
     }
 
     public function delete(int $orderId, Request $request)
     {
-        $order = ShopService::make()
-            ->setUser($this->user())
-            ->delete($orderId);
+        $order = ShopService::make()->setUser($this->user())->delete($orderId);
         flash('با موفقیت حذف شد.');
-        return redirect()
-            ->back();
+        return redirect()->back();
     }
+    
     public function updateField(int $id, $key, Request $request)
     {
-        $cart = ShopService::make()
-            ->setUser(auth()->user())
-            ->updateField($id, $key, $request->input($key));
+        $cart = ShopService::make()->setUser(auth()->user())->updateField($id, $key, $request->input($key));
         return redirect()->to(route("current.cart"));
     }
+
     public function getCurrentCart()
     {
-        $cart = ShopService::make()
-            ->setUser(auth()->user())
-            ->getCurrentCart();
-        return view("shop.show", [
+        $cart = ShopService::make()->setUser(auth()->user())->getCurrentCart();
+        return view("cart.show", [
             "cart" => $cart,
             "SEOData" => new SEOData(
-                title: trans("message.cart"),
-                description: trans("message.parde_e_shop_seo") . " | " . trans("message.orders") . " | " . trans("message.cart")
-            )
+                    title: trans("message.cart"),
+                    description: trans("message.parde_e_shop_seo") . " | " . trans("message.orders") . " | " . trans("message.cart")
+                )
         ]);
     }
 
@@ -104,9 +94,7 @@ class OrderController extends Controller
             ]
         ]);
 
-        $cart = ShopService::make()
-            ->setUser(auth()->user())
-            ->getCurrentCart([]);
+        $cart = ShopService::make()->setUser(auth()->user())->getCurrentCart([]);
         $cart->address_id = $request->address_id;
         $cart->save();
 
@@ -114,21 +102,4 @@ class OrderController extends Controller
         return redirect()->back();
     }
 
-    public function storeSingle(ShopSingleRequest $request)
-    {
-        try {
-            $cart = ShopService::make()
-                ->setUser(auth()->user())
-                ->setAmount($request->quantity)
-                ->setProductId($request->product_id)
-                ->createSingle();
-
-            return redirect()
-                ->to(route("current.cart"));
-        }
-        catch(Exception $e){
-            return redirect()->back()->withErrors(["msg" => $e->getMessage()]);
-
-        }
-    }
 }

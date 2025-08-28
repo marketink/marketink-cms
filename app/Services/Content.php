@@ -16,7 +16,7 @@ class Content
     use Report;
     protected Model $model;
     protected $content;
-    protected ?string $type = null;
+    protected $type = null;
     protected bool $getIndex = false;
     protected int $limit = 25;
 
@@ -30,7 +30,7 @@ class Content
         return new static();
     }
 
-    public function type(?string $type)
+    public function type($type)
     {
         $this->type = $type;
         return $this;
@@ -42,7 +42,11 @@ class Content
         $this->getIndex = true;
         $type = $this->type;
         return $this->model->when($type, function ($query) {
-            $query->where('type', $this->type);
+            if (is_array($this->type)) {
+                $query->whereIn('type', $this->type);
+            } else {
+                $query->where('type', $this->type);
+            }
         })->select('contents.*')->distinct();
     }
 

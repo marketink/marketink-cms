@@ -169,7 +169,7 @@
     <script src="{{ asset('assets/admin/js/dropzone.min.js') }}"></script>
     <script src="{{ asset('assets/admin/js/toastify.js') }}"></script>
     <script src="{{ asset('assets/admin/js/select2.js') }}"></script>
-    <script src="{{ asset('assets/admin/js/dashboard.js')}}?v=1.0.9"></script>
+    <script src="{{ asset('assets/admin/js/dashboard.js')}}?v=1.1.{{  time() }}"></script>
 
     @yield('script')
 </body>

@@ -33,6 +33,7 @@ function types(): array
             "discount" => false,
             "stock" => false,
             "media" => true,
+            "in_layout" => true,
             "label" => [
                 "title" => "string",
                 "body" => "text",
@@ -47,6 +48,28 @@ function types(): array
                     "parent" => 1,
                     "child" => -1
                 ]
+            ],
+            "routes" => [
+                [
+                    "name" => "categories",
+                    "json" => false,
+                    "find" => false,
+                    "view" => "site.categories",
+                    "seo" => [
+                        "title" => "",
+                        "description" => ""
+                    ]
+                ],
+                [
+                    "name" => "category",
+                    "json" => false,
+                    "find" => true,
+                    "view" => "site.category",
+                    "seo" => [
+                        "title" => "",
+                        "description" => ""
+                    ]
+                ]
             ]
         ],
         [
@@ -55,6 +78,7 @@ function types(): array
             "discount" => false,
             "stock" => false,
             "media" => true,
+            "comment" => true,
             "label" => [
                 "title" => "string",
                 "body" => "text",
@@ -65,7 +89,29 @@ function types(): array
             "name" => trans("message.blog"),
             "files" => ["banner"],
             "menu_icon" => "article",
-            "relations" => []
+            "relations" => [],
+            "routes" => [
+                [
+                    "name" => "blogs",
+                    "json" => false,
+                    "find" => false,
+                    "view" => "site.blogs",
+                    "seo" => [
+                        "title" => trans("message.posts"),
+                        "description" => trans("message.posts")
+                    ]
+                ],
+                [
+                    "name" => "blog",
+                    "json" => false,
+                    "find" => true,
+                    "view" => "site.blog",
+                    "seo" => [
+                        "title" => trans("message.posts"),
+                        "description" => trans("message.posts")
+                    ]
+                ]
+            ]
         ],
         [
             "type" => "product",
@@ -73,6 +119,8 @@ function types(): array
             "discount" => false,
             "stock" => true,
             "media" => true,
+            "shop" => true,
+            "comment" => true,
             "label" => [
                 "title" => "string",
                 "label" => "string",
@@ -87,6 +135,28 @@ function types(): array
                     "parent" => 1,
                     "child" => 0
                 ]
+            ],
+            "routes" => [
+                [
+                    "name" => "products",
+                    "json" => false,
+                    "find" => false,
+                    "view" => "site.products",
+                    "seo" => [
+                        "title" => trans("message.products"),
+                        "description" => trans("message.products")
+                    ]
+                ],
+                [
+                    "name" => "product",
+                    "json" => false,
+                    "find" => true,
+                    "view" => "site.product",
+                    "seo" => [
+                        "title" => trans("message.product"),
+                        "description" => trans("message.product")
+                    ]
+                ]
             ]
         ],
         [
@@ -95,6 +165,7 @@ function types(): array
             "discount" => false,
             "stock" => false,
             "media" => true,
+            "in_home" => true,
             "label" => [
                 "title" => "string",
                 "body" => "text",
@@ -116,6 +187,7 @@ function types(): array
             "discount" => false,
             "stock" => false,
             "media" => true,
+            "in_home" => true,
             "label" => [
                 "title" => "string",
                 "link" => "link",
@@ -133,6 +205,7 @@ function types(): array
             "discount" => false,
             "stock" => false,
             "media" => true,
+            "in_home" => true,
             "label" => [
                 "title" => "string",
                 "link" => "link",
@@ -151,6 +224,7 @@ function types(): array
             "discount" => false,
             "stock" => false,
             "media" => false,
+            "in_layout" => true,
             "label" => [
                 "icon" => "string",
                 "link" => "link",
@@ -173,7 +247,19 @@ function types(): array
             "name" => trans("message.about_us"),
             "files" => ["banner"],
             "menu_icon" => "article",
-            "relations" => []
+            "relations" => [],
+            "routes" => [
+                [
+                    "name" => "about-us",
+                    "json" => false,
+                    "find" => false,
+                    "view" => "site.about-us",
+                    "seo" => [
+                        "title" => trans("message.about_us"),
+                        "description" => trans("message.about_us"),
+                    ]
+                ],
+            ]
         ],
         [
             "type" => "faq",
@@ -188,7 +274,19 @@ function types(): array
             "name" => trans("message.faq"),
             "files" => [],
             "menu_icon" => "article",
-            "relations" => []
+            "relations" => [],
+            "routes" => [
+                [
+                    "name" => "faq",
+                    "json" => false,
+                    "find" => false,
+                    "view" => "site.faq",
+                    "seo" => [
+                        "title" => trans("message.faq"),
+                        "description" => trans("message.faq"),
+                    ]
+                ],
+            ]
         ]
     ];
 }
@@ -331,6 +429,7 @@ function siteSetting()
         ]
     ]);
 }
+
 function checkActiveMenu($url, $default = 'text-dark', $active = "")
 {
     if (request()->url() === $url) {
@@ -346,7 +445,6 @@ function getLastUrlTitle()
     $url = $url[count($url) - 1];
     return trans("message.$url");
 }
-
 
 function get($data, $path)
 {
@@ -370,66 +468,6 @@ function removeBOM($str)
     return preg_replace('/^\xEF\xBB\xBF/u', '', $str);
 }
 
-function categories()
-{
-    return Cache::rememberForever("category-in-site", function () {
-        return app(App\Services\Content::class)->type("category")->index()->parent()->publish()->get()->toArray();
-    });
-}
-
-function socials()
-{
-    return Cache::rememberForever("social-in-site", function () {
-        return app(App\Services\Content::class)->type("social")->index()->publish()->get()->toArray();
-    });
-}
-
-function products()
-{
-    return Cache::rememberForever("product-in-site", function () {
-        return app(App\Services\Content::class)->type("product")->index()->publish()->with('parents')->get()->toArray();
-    });
-}
-
-function posts()
-{
-    return app(App\Services\Content::class)->type("blog")->index()->publish()->with('parents')->paginate();
-}
-
-function collectProducts($products, $relations = [])
-{
-    $request = request();
-    $data = collect($products);
-    try {
-        switch ($request->sort) {
-            case '1':
-                $data = $data->sortByDesc('id');
-                break;
-            case '2':
-                $data = $data->sortByDesc('info.final_price');
-                break;
-            case '3':
-                $data = $data->sortBy('info.final_price');
-                break;
-            default:
-                $data = $data->sortByDesc('id');
-        }
-    } catch (\Exception $e) {
-
-    }
-    if ($request->search)
-        $data = $data->filter(function ($item) use ($request) {
-            return Str::contains($item['info']['title'], $request->search);
-        });
-    if (count($relations) > 0)
-        $data = $data->filter(function ($item) use ($relations) {
-            return collect($item['parents'])->pluck('id')->intersect($relations)->isNotEmpty();
-        });
-
-
-    return $data;
-}
-
 function productSortLists()
 {
     return [
@@ -447,107 +485,25 @@ function productSortLists()
         ]
     ];
 }
+
 function getProvinces()
 {
     $service = new \App\Services\Location\StateService();
     return $service->getAllProvinces();
 }
+
 function getCities(int $id)
 {
     $service = new \App\Services\Location\StateService();
     return $service->getCitiesByProvinceId($id);
 }
+
 function toJalali($time)
 {
     return verta($time)->format("l d S F");
 }
 
-
-function sides()
-{
-    return [
-        [
-            "name" => trans("message.side_v1"),
-            "from" => "100",
-            "value" => 1,
-            "image" => asset("assets/platform/images/1.png")
-        ],
-        [
-            "name" => trans("message.side_v2"),
-            "from" => "100",
-            "value" => 2,
-            "image" => asset("assets/platform/images/2.png")
-        ],
-        [
-            "name" => trans("message.side_v3"),
-            "from" => "0",
-            "value" => 3,
-            "image" => asset("assets/platform/images/3.png")
-        ],
-        [
-            "name" => trans("message.side_v4"),
-            "from" => "0",
-            "value" => 4,
-            "image" => asset("assets/platform/images/4.png")
-        ],
-        [
-            "name" => trans("message.side_v5"),
-            "from" => "300",
-            "value" => 5,
-            "image" => asset("assets/platform/images/5.png")
-        ]
-    ];
-}
-
 function getSetting()
 {
     return \App\Models\Setting::first();
-}
-
-function orderDetail($key, $value)
-{
-    $response = "";
-    switch ($key) {
-        case 'rod':
-            if ($value == 1)
-                $response = "دستی";
-            if ($value == 2)
-                $response = "اتوماتیک";
-            break;
-        case 'from':
-            $response = trans("message.side_v$value");
-            break;
-        case 'tool':
-            $response = "میله ابزار انتخابی در سفارش";
-            if ($value == 0)
-                $response = "میله ابزار ندارم";
-            break;
-        case 'dookht':
-            $response = "میله ابزار انتخابی در سفارش";
-            if ($value == 1)
-                $response = "پانچ (پنل آماده)";
-            if ($value == 2)
-                $response = "مینیمال (ارتفاع سفارشی)";
-            if ($value == 3)
-                $response = "پانچ (پنل سفارشی)";
-            break;
-        case 'base_type':
-            $response = "";
-            if ($value == 1)
-                $response = "دیواری";
-            if ($value == 2)
-                $response = "سقفی";
-            break;
-        case 'porchin_kamchin':
-            $response = "";
-            if($value == "kamchin")
-                $response = "کم چین";
-            else
-                $response = "پر چین";
-            break;
-        default:
-            $response = $value;
-    }
-    ;
-    return $response;
 }

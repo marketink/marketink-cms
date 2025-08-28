@@ -47,6 +47,7 @@ class HomeController extends Controller
         $this->user->update($user,$request->validated());
         return redirect()->back();
     }
+    
     public function updatePassword(UpdatePasswordRequest $request)
     {
         try {

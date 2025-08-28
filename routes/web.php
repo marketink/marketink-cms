@@ -18,15 +18,13 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/', [App\Http\Controllers\Site\HomeController::class, 'index']);
-Route::get('/products/{category}', [App\Http\Controllers\Site\HomeController::class, 'products'])->name('products.category');
-Route::get('/products', [App\Http\Controllers\Site\HomeController::class, 'products'])->name('products');
-Route::get('/product/{id}', [App\Http\Controllers\Site\HomeController::class, 'product'])->name('product');
-Route::get('/blog', [App\Http\Controllers\Site\HomeController::class, 'posts'])->name('posts');
-Route::get('/blog/{id}', [App\Http\Controllers\Site\HomeController::class, 'post'])->name('post');
-Route::post('comment/{id}', [App\Http\Controllers\Site\HomeController::class, 'postComment'])->middleware('auth')->name('comment.post');
+Route::get('/', [App\Http\Controllers\SiteController::class, 'index']);
+
+Route::post('comment/{id}', [App\Http\Controllers\SiteController::class, 'postComment'])->middleware('auth')->name('comment.post');
+Route::get("home", [HomeController::class, 'index'])->name('home')->middleware(["auth"]);
 
 Auth::routes();
+
 Route::prefix("/")
     ->controller(VerifyController::class)
     ->group(function () {
@@ -34,15 +32,6 @@ Route::prefix("/")
         Route::post("/send-verification", "sendCode")->name("sendVerificationCode");
         Route::post("/verify-account", "verifyAccount")->name("verifyAccount");
     });
-
-Route::prefix("/")
-    ->controller(SettingController::class)
-    ->group(function () {
-        Route::get("/about-us", "aboutUs")->name("aboutUs");
-        Route::get("/faq", "faq")->name("faq");
-    });
-
-Route::get("home", [HomeController::class, 'index'])->name('home')->middleware(["auth"]);
 
 Route::prefix("profile")
     ->middleware(["auth"])
@@ -72,7 +61,6 @@ Route::prefix("profile")
                 Route::post('/', 'create')->name('addNewOrder');
                 Route::delete('/{id}', 'delete')->name('deleteOrder');
                 Route::patch('/{id}/{key}}', 'updateField')->name('updateCart');
-                Route::post("/single", "storeSingle")->name("storeSingle");
             });
     });
 
@@ -126,3 +114,5 @@ Route::group([
     });
 
 });
+
+Route::get('/{type}/{path?}', [App\Http\Controllers\SiteController::class, 'contents'])->where('path', '.*');

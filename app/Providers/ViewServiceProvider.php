@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use App\Services\Content;
+use Illuminate\Support\Facades\Cache;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -23,9 +25,13 @@ class ViewServiceProvider extends ServiceProvider
     public function register(): void
     {
         View::composer('*', function ($view)  {
-            $view->with('categories', categories());
-            $view->with('products', products());
-            $view->with('socials', socials());
+            $types = collect(types())->where('in_layout', true);
+            foreach ($types as $type) {
+                $key = $type['type'] . "-in-site";
+                $view->with($type['type'], Cache::rememberForever($key, function () use ($type) {
+                    return app(Content::class)->type($type['type'])->index()->publish()->get()->toArray();
+                }));
+            }
         });
     }
 

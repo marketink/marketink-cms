@@ -189,15 +189,7 @@ return [
     "user" => "کاربر",
     "multiple" => "سفارش پرده",
     "single" => "سفارش تکی",
-    "orderDetail" => [
-        "rod" => "نوع کیله",
-        "from" => "نوع کناره/حریر",
-        "tool" => "ابزار",
-        "width" => "عرض",
-        "dookht" => "نوع دوخت",
-        "height" => "ارتفاع",
-        "length" => "طول میله",
-        "base_type" => "نوع پایه",
-        "porchin_kamchin" => "نوع"
-    ]
+    "logo" => "لوگو",
+    "banner" => "بنر",
+    "dropzone_title" => ":logo خود را اینجا قرار دهید یا کلیک کنید"
 ];

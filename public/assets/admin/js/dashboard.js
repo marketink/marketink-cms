@@ -26,7 +26,7 @@ function resetForm(self, mediaStatus = false) {
 $(document).on('click', '.open-modal', function () {
     const modal = $($(this).data('target'));
     modal.find('form').each(function () {
-        resetForm(this)
+        resetForm(this, true)
     });
     modal.modal('toggle');
 });
