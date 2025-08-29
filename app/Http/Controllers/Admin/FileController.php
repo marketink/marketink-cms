@@ -20,7 +20,7 @@ class FileController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10000',
             'content' => 'required|in:' . collect(types())->pluck('type')->values()->join(','),
             'type' => [
                 'required_if:content,true',

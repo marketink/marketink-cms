@@ -32,6 +32,27 @@ function langs(): array
     ];
 }
 
+function settingFields(){
+    return [
+        [
+            "name" => "شعار",
+            "key" => "slogan"
+        ],
+        [
+            "name" => "متن دکمه شعار",
+            "key" => "slogan_button"
+        ],
+        [
+            "name" => "لینک دکمه شعار",
+            "key" => "slogan_link"
+        ],
+        [
+            "name" => "توضیحات",
+            "key" => "description"
+        ]
+    ];
+}
+
 function types(): array
 {
     return [
@@ -93,6 +114,58 @@ function types(): array
                 "embed" => "text",
                 "label" => "string",
                 "read" => "string",
+            ],
+            "in_layout" => true,
+            "in_layout_query" => [    
+                [
+                    "name" => "latest",
+                    "where" => [],
+                    "order" => [
+                        "field" => "id",
+                        "sort" => "desc"
+                    ],
+                    "limit" => 10
+                ]
+            ],            
+
+            "in_home" => true,
+            "in_home_query" => [
+                [
+                    "name" => "popular",
+                    "where" => [],
+                    "order" => [
+                        "field" => "id",
+                        "sort" => "desc"
+                    ],
+                    "limit" => 5
+                ],
+                [
+                    "name" => "new",
+                    "where" => [],
+                    "order" => [
+                        "field" => "id",
+                        "sort" => "desc"
+                    ],
+                    "limit" => 4
+                ], 
+                [
+                    "name" => "rand",
+                    "where" => [],
+                    "order" => [
+                        "field" => "id",
+                        "sort" => "desc"
+                    ],
+                    "limit" => 8
+                ],
+                [
+                    "name" => "",
+                    "where" => [],
+                    "order" => [
+                        "field" => "id",
+                        "sort" => "desc"
+                    ],
+                    "limit" => 10
+                ]
             ],
             "name" => trans("message.blog"),
             "files" => ["banner"],
@@ -196,6 +269,7 @@ function types(): array
             "stock" => false,
             "media" => true,
             "in_home" => true,
+            "in_layout" => true,
             "label" => [
                 "title" => "string",
                 "link" => "link",
@@ -234,8 +308,10 @@ function types(): array
             "media" => false,
             "in_layout" => true,
             "label" => [
+                "title" => "string",
                 "icon" => "string",
                 "link" => "link",
+                "followers" => "string",
             ],
             "files" => [],
             "name" => trans("message.social"),
@@ -417,7 +493,9 @@ function siteSetting()
         },
         "siteName" => env('APP_NAME'),
         'siteLnaguage' => 'fa',
-        'storage_driver' => 'ftp',
+        'storage_driver' => 'local',
+        'storage_folder' => 'public',
+        'storage_url' => url('/storage/assets/images'),
         'afterContentUpdate' => function ($item) {
             Cache::forget("$item->type-in-site");
         },

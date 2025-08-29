@@ -26,6 +26,6 @@ class File extends Model
 
     public function getLinkAttribute(){
         //return asset('/assets/images/' . $this->path);
-        return 'https://static.marketink.ir/assets/images/' . $this->path;
+        return siteSetting()['storage_url'] . '/' . $this->path;
     }
 }

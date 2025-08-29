@@ -65,7 +65,7 @@ class File
         $this->file->move(storage_path('app/' . $this->baseFolder), $path);
         $this->delete();
         */
-        $folder = "public_html/assets/images";
+        $folder = siteSetting()['storage_folder'] . "/assets/images";
         Storage::disk(siteSetting()['storage_driver'])->put("$folder/$path", file_get_contents($this->file->getRealPath()));
         $this->path = $path;
         return $this->path;

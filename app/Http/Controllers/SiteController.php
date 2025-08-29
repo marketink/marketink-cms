@@ -33,9 +33,25 @@ class SiteController extends Controller
     {
         $types = collect(types())->where('in_home', true);
         $data = [];
-        foreach($types as $type){
-            $data[Str::snake(Str::pluralStudly($type['type']))] = $this->contentService->type($type['type'])->index()->publish()->get()->toArray();
+        foreach ($types as $type) {
+            $query = $this
+            ->contentService
+            ->type($type['type'])
+            ->index()
+            ->publish();
+            if(isset($type['in_home_query']) && is_array($type['in_home_query'])){
+                foreach($type['in_home_query'] as $in){
+                    $k = $in['name'] ? "_" . $in['name'] : '';
+                    $key = Str::snake(Str::pluralStudly($type['type'] . $k));
+                    $d = $query->where($in['where'])->limit($in['limit'])->orderby($in['order']['field'], $in['order']['sort']);                    
+                    $data[$key] = $d->get()->toArray();
+                }
+            } else {
+                $query = $query->get()->toArray();
+                $data[Str::snake(Str::pluralStudly($type['type']))] = $query;
+            }
         }
+
         $data['SEOData'] = new SEOData(
             siteSetting()['siteName'],
             trans("message.parde_e_shop_seo") . " | " . trans("message.parde_e_shop"),
@@ -95,7 +111,7 @@ class SiteController extends Controller
         $request->validate([
             'comment' => [
                 'required',
-                'string', 
+                'string',
                 function ($attribute, $value, $fail) {
                     $wordCount = str_word_count(strip_tags($value));
                     if ($wordCount > 200) {

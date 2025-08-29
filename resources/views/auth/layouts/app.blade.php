@@ -66,7 +66,6 @@
         @yield('content')
     </main>
 
-    @include('layouts.footer')
     <script src="{{ asset('assets/platform/js/vendors/password.js')}}"></script>
     <script src="{{ asset('build/main.min.js') }}?v={{ siteSetting()['assets']['js']['main'] }}" async></script>
 </body>

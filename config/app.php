@@ -83,7 +83,7 @@ return [
     |
     */
 
-    'locale' => siteSetting()['siteLnaguage'],
+    'locale' => 'fa', //siteSetting()['siteLnaguage'],
 
     /*
     |--------------------------------------------------------------------------

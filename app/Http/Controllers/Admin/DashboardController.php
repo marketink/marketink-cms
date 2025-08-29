@@ -89,34 +89,19 @@ class DashboardController extends Controller
     public function setting()
     {
         $setting = Setting::first();
+        $fields = settingFields();
         return view('admin.setting', [
-            'setting' => $setting
+            'setting' => $setting,
+            'fields' => $fields
         ]);
     }
 
     public function postSetting(Request $request)
     {
-        $harir_ids = $request->harir_ids;
-        $height_conf = $request->height_conf;
-        $kenareh_ids = $request->kenareh_ids;
-        $curtain_tools = $request->curtain_tools;
-        $shipping_cost = $request->shipping_cost;
-        $shipping_cost_with_rod = $request->shipping_cost_with_rod;
         $app_color = $request->app_color;
-        $minimal_conf = $request->minimal_conf;
-        $tel = $request->tel;
         Setting::updateOrCreate([], [
             'app_color' => $app_color,
-            'option' => json_encode([
-                'harir_ids' => $harir_ids,
-                'height_conf' => $height_conf,
-                'kenareh_ids' => $kenareh_ids,
-                'curtain_tools' => $curtain_tools,
-                'shipping_cost' => $shipping_cost,
-                'shipping_cost_with_rod' => $shipping_cost_with_rod,
-                'minimal_conf' => $minimal_conf,
-                'tel' => $tel,
-            ])
+            'option' => json_encode($request->except(['_token', '_method']))
         ]);
         return response()->json([
             "message" => "تنظیمات با موفقیت ثبت شد"
